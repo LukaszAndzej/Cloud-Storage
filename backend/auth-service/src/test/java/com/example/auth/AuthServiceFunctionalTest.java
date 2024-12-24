@@ -1,26 +1,38 @@
 package com.example.auth;
 
+import io.restassured.RestAssured;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestPropertySource(properties = "spring.main.web-application-type=servlet")
 @ActiveProfiles("test") // Wskazanie profilu testowego
 public class AuthServiceFunctionalTest {
 
+    @LocalServerPort
+    private int port;
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @BeforeEach
+    public void setUp() {
+        RestAssured.port = port;
+        System.out.println("Running tests on port: " + port);
+    }
 
     @BeforeEach
     public void resetDatabase() {
@@ -39,21 +51,21 @@ public class AuthServiceFunctionalTest {
     public void testUserLoginSuccess() {
         given()
             .contentType("application/json")
-            .body("{\"username\": \"test_user\", \"password\": \"password123\"}") // Przekazanie danych logowania w JSON
+            .body("{\"username\": \"test_user\", \"password\": \"password123\"}")
         .when()
-            .post("http://localhost:8081/auth/login")
+            .post("/auth/login")
         .then()
             .statusCode(200)
-            .body("username", equalTo("test_user")); // Sprawdzenie odpowiedzi
+            .body("username", equalTo("test_user"));
     }
 
     @Test
     public void testUserLoginFailure() {
         given()
-            .auth()
-            .basic("invalid_user", "invalid_password")
+            .contentType("application/json")
+            .body("{\"username\": \"invalid_user\", \"password\": \"invalid_password\"}")
         .when()
-            .get("http://localhost:8081/auth/login")
+            .post("/auth/login")
         .then()
             .statusCode(401);
     }
@@ -64,7 +76,7 @@ public class AuthServiceFunctionalTest {
             .contentType("application/json")
             .body("{\"username\": \"new_user\", \"password\": \"new_password\"}")
         .when()
-            .post("http://localhost:8081/auth/register")
+            .post("/auth/register")
         .then()
             .statusCode(201)
             .body("username", equalTo("new_user"));

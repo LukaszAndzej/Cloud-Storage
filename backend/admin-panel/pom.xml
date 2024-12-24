@@ -1,18 +1,19 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<!-- <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   
   <modelVersion>4.0.0</modelVersion>
-
-  <parent>
-    <groupId>com.example</groupId>
-    <artifactId>cloud-storage-system</artifactId>
-    <version>1.0.0</version>
-    <relativePath>../../pom.xml</relativePath>
-  </parent>
-
+  <groupId>com.example</groupId>
   <artifactId>admin-panel</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
   <name>admin-panel</name>
   <description>admin panel for admins</description>
+
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <java.version>17</java.version>
+  </properties>
 
   <dependencies>
     <dependency>
@@ -48,4 +49,4 @@
           </plugin>
       </plugins>
   </build>
-</project>
+</project> -->

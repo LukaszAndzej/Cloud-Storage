@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -13,6 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import com.example.auth.service.CustomUserDetailsService;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
@@ -26,10 +28,10 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll() // Zezwól na dostęp do endpointów auth
-                .anyRequest().authenticated() // Wymagaj uwierzytelnienia dla pozostałych
+                .requestMatchers("/auth/**").permitAll()
+                .anyRequest().authenticated()
             )
-            .httpBasic(httpBasic -> {}); // Konfiguracja HTTP Basic
+            .httpBasic(httpBasic -> {});
         return http.build();
     }
 
@@ -47,7 +49,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }

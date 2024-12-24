@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 (rs, rowNum) -> User.builder()
                     .username(rs.getString("username"))
                     .password(rs.getString("password"))
-                    .roles("USER") // Można dostosować role
+                    .roles("USER")
                     .build(),
                 username
             );
