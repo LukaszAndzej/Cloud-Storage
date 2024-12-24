@@ -61,7 +61,7 @@ public class AuthServiceFunctionalTest {
     @Test
     public void testUserRegistration() {
         given()
-            .contentType("application/json") // Dodano Content-Type
+            .contentType("application/json")
             .body("{\"username\": \"new_user\", \"password\": \"new_password\"}")
         .when()
             .post("http://localhost:8081/auth/register")

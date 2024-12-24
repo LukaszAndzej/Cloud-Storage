@@ -1,0 +1,82 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    name: Build and Test Services
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: test_db
+        options: >-
+          --health-cmd="pg_isready -U test_user -d test_db"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    strategy:
+      matrix:
+        service: [auth-service, file-service, payment-service, support-service]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Wait for PostgreSQL
+        run: |
+          for i in {1..30}; do
+            nc -zv localhost 5432 && break || sleep 1
+          done
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+
+      - name: Build and test ${{ matrix.service }}
+        working-directory: backend/${{ matrix.service }}
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/test_db
+          SPRING_DATASOURCE_USERNAME: test_user
+          SPRING_DATASOURCE_PASSWORD: test_password
+        run: |
+          mvn clean install
+          mvn test
+
+  docker-build:
+    name: Build and Push Docker Images
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        service: [auth-service, file-service, payment-service, support-service]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker image for ${{ matrix.service }}
+        working-directory: backend/${{ matrix.service }}
+        run: |
+          docker build -t lukaszandzej/cloud-storage:${{ matrix.service }} .
+          docker tag lukaszandzej/cloud-storage:${{ matrix.service }}:latest
+
+      - name: Push Docker image
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          docker push lukaszandzej/cloud-storage:${{ matrix.service }}
+          docker push lukaszandzej/cloud-storage:${{ matrix.service }}:latest
