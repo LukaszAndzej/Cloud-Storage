@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Storage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-b from-blue-100 to-blue-300 min-h-screen flex items-center justify-center">
+    <div class="bg-white shadow-md rounded-lg p-8 max-w-lg w-full">
+        <h1 class="text-4xl font-bold text-blue-600 mb-6 text-center">Welcome to Cloud Storage</h1>
+
+        <!-- Jeśli użytkownik jest zalogowany -->
+        <div th:if="${loggedIn != null && loggedIn}">
+            <p class="text-lg text-gray-700 text-center mb-6">Welcome back, user!</p>
+            <div class="space-y-4">
+                <a href="/upload" class="block w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg text-center transition">
+                    Upload Files
+                </a>
+                <a href="/files" class="block w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg text-center transition">
+                    View Uploaded Files
+                </a>
+                <form action="/logout" method="post">
+                    <button type="submit" class="block w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg text-center transition">
+                        Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Jeśli użytkownik nie jest zalogowany -->
+        <div th:if="${loggedIn == null || !loggedIn}">
+            <form action="/login" method="post" class="space-y-4">
+                <input type="text" name="username" placeholder="Enter your username" class="w-full border rounded-lg px-4 py-2">
+                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition">
+                    Login
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
