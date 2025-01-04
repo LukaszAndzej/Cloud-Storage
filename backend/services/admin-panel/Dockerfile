@@ -1,0 +1,27 @@
+# Faza budowy
+FROM maven:3.9.5-eclipse-temurin-17 AS builder
+
+WORKDIR /app
+
+COPY pom.xml ./
+COPY src ./src
+
+# Budowanie aplikacji
+RUN mvn clean package -DskipTests
+
+# Faza końcowa
+FROM eclipse-temurin:17-jre-alpine
+
+WORKDIR /app
+
+# Kopiowanie zbudowanego JAR-a z fazy budowy
+COPY --from=builder /app/target/admin-panel-1.0.0.jar admin-panel.jar
+
+# Kopiowanie pliku konfiguracyjnego
+COPY src/main/resources/application.properties /app/config/application.properties
+
+# Eksponowanie portu
+EXPOSE 8080
+
+# Uruchamianie aplikacji
+CMD ["java", "-jar", "admin-panel.jar", "--spring.config.location=/app/config/application.properties"]

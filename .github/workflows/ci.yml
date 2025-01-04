@@ -13,21 +13,6 @@ jobs:
     name: Build and Test Services
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:17
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_USER: cloud_user
-          POSTGRES_PASSWORD: root
-          POSTGRES_DB: postgres
-        options: >-
-          --health-cmd="pg_isready -U cloud_user -d postgres"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
     strategy:
       matrix:
         service: [auth-service, admin-panel, file-service, payment-service, support-service]
@@ -36,16 +21,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Wait for PostgreSQL
-        run: |
-          for i in {1..30}; do
-            nc -zv localhost 5432 && break || sleep 2
-          done
-
-      - name: Create test database
-        run: |
-          docker exec ${{ job.services.postgres.id }} psql -U cloud_user -d postgres -c "CREATE DATABASE cloud_storage_db;"
-
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
@@ -53,14 +28,9 @@ jobs:
           distribution: 'temurin'
 
       - name: Build and Test ${{ matrix.service }}
-        working-directory: backend/${{ matrix.service }}
-        env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/cloud_storage_db
-          SPRING_DATASOURCE_USERNAME: cloud_user
-          SPRING_DATASOURCE_PASSWORD: root
+        working-directory: backend/services/${{ matrix.service }}
         run: |
           mvn clean install -Dspring.profiles.active=test
-          mvn test -Dspring.profiles.active=test
 
   docker-build:
     name: Build and Push Docker Images
@@ -75,7 +45,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build Docker image for ${{ matrix.service }}
-        working-directory: backend/${{ matrix.service }}
+        working-directory: backend/services/${{ matrix.service }}
         run: |
           DOCKER_IMAGE_NAME="lukaszandzej/cloud-storage-${{ matrix.service }}"
           TAG="${{ github.sha }}"
