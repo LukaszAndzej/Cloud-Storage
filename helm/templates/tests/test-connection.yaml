@@ -1,0 +1,11 @@
+{{- if .Values.postgres }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-connection
+spec:
+  containers:
+    - name: curl
+      image: curlimages/curl:latest
+      command: ["sh", "-c", "curl -f http://{{ .Values.postgres.name }}:5432 || exit 1"]
+{{- end }}
