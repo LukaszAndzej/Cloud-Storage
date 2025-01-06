@@ -31,13 +31,14 @@ applications:
   - name: auth-service
     image: lukaszandzej/cloud-storage-auth-service:latest
     replicas: 1
-    port: 8082
+    port: 8080  # Zmiana na 8080 zgodnie z logami
     env:
       DB_HOST: postgres
       DB_PORT: "5432"
       DB_NAME: cloud_storage
       DB_USER: cloud_user
       DB_PASSWORD: root
+      SERVER_PORT: 8080  # Dodanie zmiennej środowiskowej
 
   - name: file-service
     image: lukaszandzej/cloud-storage-file-service:latest
@@ -82,6 +83,7 @@ applications:
       DB_NAME: cloud_storage
       DB_USER: cloud_user
       DB_PASSWORD: root
+      AUTH_SERVICE_URL: http://auth-service.default.svc.cluster.local:8080  # Poprawiony URL
 
 ingress:
   enabled: true

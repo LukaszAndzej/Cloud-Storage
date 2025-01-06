@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class UserController {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private static final String AUTH_SERVICE_URL = "http://auth-service:8082";
+    private static final String AUTH_SERVICE_URL = "http://auth-service.default.svc.cluster.local:8082";
     private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
 
     @GetMapping("/login")
