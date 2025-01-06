@@ -28,9 +28,9 @@ jobs:
           distribution: 'temurin'
 
       - name: Build and Test ${{ matrix.service }}
-        working-directory: backend
+        working-directory: backend/services/${{ matrix.service }}
         run: |
-          mvn clean install -Dspring.profiles.active=test -pl services/${{ matrix.service }} -am
+          mvn clean install -Dspring.profiles.active=test
 
   docker-build:
     name: Build and Push Docker Images
