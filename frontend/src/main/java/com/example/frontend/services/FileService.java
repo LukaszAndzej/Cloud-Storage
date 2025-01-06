@@ -1,39 +1,26 @@
 package com.example.frontend.services;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.Arrays;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
+@Service
 public class FileService {
-    private final HttpClient httpClient = HttpClient.newHttpClient();
 
-    public List<String> getAllFiles() throws Exception {
-        HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/file/files"))
-            .GET()
-            .build();
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final String fileServiceUrl = "http://file-service:8083";
 
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        if (response.statusCode() == 200) {
-            return Arrays.asList(response.body().split(","));
-        } else {
-            throw new RuntimeException("Failed to fetch files: " + response.body());
-        }
+    public void uploadFile(MultipartFile file) {
+        String url = fileServiceUrl + "/upload";
+        restTemplate.postForEntity(url, file.getResource(), String.class);
     }
 
-    public void deleteFile(String fileName) {
-        try {
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/file/files/" + fileName))
-                .DELETE()
-                .build();
-
-            httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to delete file: " + fileName);
-        }
+    public List<String> getAllFiles() {
+        String url = fileServiceUrl + "/files";
+        ResponseEntity<List> response = restTemplate.getForEntity(url, List.class);
+        return response.getBody();
     }
 }

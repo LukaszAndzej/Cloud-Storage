@@ -10,6 +10,7 @@ data:
         id BIGSERIAL PRIMARY KEY,
         username VARCHAR(255) UNIQUE NOT NULL,
         password TEXT NOT NULL,
+        password_hash TEXT,
         email VARCHAR(255) UNIQUE,
         role VARCHAR(50) DEFAULT 'USER',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -20,6 +21,7 @@ data:
         user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
         file_name VARCHAR(255) NOT NULL,
         file_path TEXT NOT NULL,
+        size BIGINT,
         uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
@@ -34,16 +36,16 @@ data:
     CREATE INDEX idx_logs_user_id ON logs(user_id);
 
   02-init.sql: |
-    INSERT INTO users (username, password, email, role) 
+    INSERT INTO users (username, password, password_hash, email, role) 
     VALUES 
-    ('test_user', 'hashed_password_1', 'user1@example.com', 'ADMIN'),
-    ('demo_user', 'hashed_password_2', 'user2@example.com', 'USER');
+    ('test_user', 'hashed_password_1', 'hashed_password_1', 'user1@example.com', 'ADMIN'),
+    ('demo_user', 'hashed_password_2', 'hashed_password_2', 'user2@example.com', 'USER');
 
-    INSERT INTO file (user_id, file_name, file_path) 
+    INSERT INTO file (user_id, file_name, file_path, size) 
     VALUES 
-    (1, 'file1.txt', '/uploads/file1.txt'),
-    (1, 'file2.txt', '/uploads/file2.txt'),
-    (2, 'file3.txt', '/uploads/file3.txt');
+    (1, 'file1.txt', '/uploads/file1.txt', 1024),
+    (1, 'file2.txt', '/uploads/file2.txt', 2048),
+    (2, 'file3.txt', '/uploads/file3.txt', 512);
 
     INSERT INTO logs (user_id, action) 
     VALUES 
