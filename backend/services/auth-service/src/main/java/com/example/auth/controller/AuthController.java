@@ -31,9 +31,20 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(@RequestBody User user) {
+        if (user.getEmail() == null || user.getEmail().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Email is required"));
+        }
+
+        // Default role if not provided
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole("USER");
+        }
+
         User registeredUser = userService.register(user);
         Map<String, String> response = new HashMap<>();
         response.put("username", registeredUser.getUsername());
+        response.put("email", registeredUser.getEmail());
+        response.put("role", registeredUser.getRole());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
