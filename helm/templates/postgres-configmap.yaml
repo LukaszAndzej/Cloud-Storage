@@ -9,12 +9,13 @@ data:
     CREATE TABLE users (
         id BIGSERIAL PRIMARY KEY,
         username VARCHAR(255) UNIQUE NOT NULL,
-        password_hash TEXT NOT NULL,
+        password TEXT NOT NULL,
         email VARCHAR(255) UNIQUE,
+        role VARCHAR(50) DEFAULT 'USER',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
-    CREATE TABLE files (
+    CREATE TABLE file (
         id BIGSERIAL PRIMARY KEY,
         user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
         file_name VARCHAR(255) NOT NULL,
@@ -33,20 +34,17 @@ data:
     CREATE INDEX idx_logs_user_id ON logs(user_id);
 
   02-init.sql: |
-    -- Przyklad dodania użytkowników
-    INSERT INTO users (username, password_hash, email) 
+    INSERT INTO users (username, password, email, role) 
     VALUES 
-    ('test_user', 'hashed_password_1', 'user1@example.com'),
-    ('demo_user', 'hashed_password_2', 'user2@example.com');
+    ('test_user', 'hashed_password_1', 'user1@example.com', 'ADMIN'),
+    ('demo_user', 'hashed_password_2', 'user2@example.com', 'USER');
 
-    -- Przyklad dodania plików
-    INSERT INTO files (user_id, file_name, file_path) 
+    INSERT INTO file (user_id, file_name, file_path) 
     VALUES 
     (1, 'file1.txt', '/uploads/file1.txt'),
     (1, 'file2.txt', '/uploads/file2.txt'),
     (2, 'file3.txt', '/uploads/file3.txt');
 
-    -- Przyklad dodania logów
     INSERT INTO logs (user_id, action) 
     VALUES 
     (1, 'User login'),
