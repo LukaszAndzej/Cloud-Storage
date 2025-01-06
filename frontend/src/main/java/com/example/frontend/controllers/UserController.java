@@ -12,10 +12,11 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 @Controller
+@RequestMapping("/user")
 public class UserController {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private static final String AUTH_SERVICE_URL = "http://auth-service.default.svc.cluster.local:8082";
+    private static final String AUTH_SERVICE_URL = "http://auth-service.default.svc.cluster.local:8080";
     private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
 
     @GetMapping("/login")
@@ -96,7 +97,7 @@ public class UserController {
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 LOGGER.info("User registered successfully: " + username);
-                return "redirect:/login";
+                return "redirect:/user/login";
             } else {
                 model.addAttribute("error", "Registration failed. Try again.");
                 LOGGER.warning("Registration failed for user: " + username);
