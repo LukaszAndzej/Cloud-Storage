@@ -28,7 +28,6 @@ spec:
         volumeMounts:
         - name: postgres-init-scripts
           mountPath: /docker-entrypoint-initdb.d
-          readOnly: true
       volumes:
       - name: postgres-init-scripts
         configMap:

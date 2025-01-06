@@ -8,7 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: SERIAL
+                  type: BIGSERIAL
                   constraints:
                     primaryKey: true
               - column:
@@ -29,5 +29,64 @@ databaseChangeLog:
                     unique: true
               - column:
                   name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+  - changeSet:
+      id: 2
+      author: initial
+      changes:
+        - createTable:
+            tableName: files
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: INT
+                  constraints:
+                    foreignKeyName: fk_files_users
+                    references: users(id)
+              - column:
+                  name: file_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: file_path
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: uploaded_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+  - changeSet:
+      id: 3
+      author: initial
+      changes:
+        - createTable:
+            tableName: logs
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: INT
+                  constraints:
+                    foreignKeyName: fk_logs_users
+                    references: users(id)
+              - column:
+                  name: action
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: timestamp
                   type: TIMESTAMP
                   defaultValueComputed: CURRENT_TIMESTAMP

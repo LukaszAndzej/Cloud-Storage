@@ -6,6 +6,49 @@ metadata:
     app: postgres
 data:
   01-schema.sql: |
-    {{ .Files.Get "backend/config/database/01-schema.sql" | indent 4 }}
+    CREATE TABLE users (
+        id BIGSERIAL PRIMARY KEY,
+        username VARCHAR(255) UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        email VARCHAR(255) UNIQUE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE files (
+        id BIGSERIAL PRIMARY KEY,
+        user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+        file_name VARCHAR(255) NOT NULL,
+        file_path TEXT NOT NULL,
+        uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE logs (
+        id BIGSERIAL PRIMARY KEY,
+        user_id BIGINT REFERENCES users(id),
+        action VARCHAR(255) NOT NULL,
+        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE INDEX idx_files_user_id ON files(user_id);
+    CREATE INDEX idx_logs_user_id ON logs(user_id);
+
   02-init.sql: |
-    {{ .Files.Get "backend/config/database/02-init.sql" | indent 4 }}
+    -- Przyklad dodania użytkowników
+    INSERT INTO users (username, password_hash, email) 
+    VALUES 
+    ('test_user', 'hashed_password_1', 'user1@example.com'),
+    ('demo_user', 'hashed_password_2', 'user2@example.com');
+
+    -- Przyklad dodania plików
+    INSERT INTO files (user_id, file_name, file_path) 
+    VALUES 
+    (1, 'file1.txt', '/uploads/file1.txt'),
+    (1, 'file2.txt', '/uploads/file2.txt'),
+    (2, 'file3.txt', '/uploads/file3.txt');
+
+    -- Przyklad dodania logów
+    INSERT INTO logs (user_id, action) 
+    VALUES 
+    (1, 'User login'),
+    (2, 'File upload'),
+    (1, 'File deletion');

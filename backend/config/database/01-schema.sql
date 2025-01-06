@@ -1,5 +1,5 @@
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     username VARCHAR(255) UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
     email VARCHAR(255) UNIQUE,
@@ -7,16 +7,16 @@ CREATE TABLE users (
 );
 
 CREATE TABLE files (
-    id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(id) ON DELETE CASCADE,
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
     file_name VARCHAR(255) NOT NULL,
     file_path TEXT NOT NULL,
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE logs (
-    id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(id),
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES users(id),
     action VARCHAR(255) NOT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
