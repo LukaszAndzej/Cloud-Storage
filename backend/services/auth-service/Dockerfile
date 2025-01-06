@@ -3,8 +3,11 @@ FROM maven:3.9.5-eclipse-temurin-17 AS builder
 
 WORKDIR /app
 
-COPY pom.xml ./
-COPY src ./src
+COPY ./services/auth-service/pom.xml ./services/auth-service/pom.xml
+COPY ./services/auth-service/src ./services/auth-service/src
+COPY ./config ./config
+
+WORKDIR /app/services/auth-service
 
 RUN mvn clean package -DskipTests
 
@@ -13,9 +16,9 @@ FROM eclipse-temurin:17-jre-alpine
 
 WORKDIR /app
 
-COPY --from=builder /app/target/auth-service-1.0.0.jar auth-service.jar
-COPY src/main/resources/application.properties /app/config/application.properties
-COPY ../../config/database/db.changelog-master.yaml /app/db/changelog/db.changelog-master.yaml
+COPY --from=builder /app/services/auth-service/target/auth-service-1.0.0.jar auth-service.jar
+COPY --from=builder /app/services/auth-service/src/main/resources/application.properties /app/config/application.properties
+COPY ./config/database/db.changelog-master.yaml /app/db/changelog/db.changelog-master.yaml
 
 EXPOSE 8080
 

@@ -28,9 +28,9 @@ jobs:
           distribution: 'temurin'
 
       - name: Build and Test ${{ matrix.service }}
-        working-directory: backend/services/${{ matrix.service }}
+        working-directory: backend
         run: |
-          mvn clean install -Dspring.profiles.active=test
+          mvn clean install -Dspring.profiles.active=test -pl services/${{ matrix.service }} -am
 
   docker-build:
     name: Build and Push Docker Images
@@ -46,12 +46,11 @@ jobs:
 
       - name: Build Docker image for backend services
         if: matrix.service != 'frontend'
-        working-directory: backend/services/${{ matrix.service }}
+        working-directory: backend
         run: |
           DOCKER_IMAGE_NAME="lukaszandzej/cloud-storage-${{ matrix.service }}"
           TAG="${{ github.sha }}"
-          docker build -t $DOCKER_IMAGE_NAME:$TAG .
-          docker tag $DOCKER_IMAGE_NAME:$TAG $DOCKER_IMAGE_NAME:latest
+          docker build -t $DOCKER_IMAGE_NAME:$TAG -t $DOCKER_IMAGE_NAME:latest -f services/${{ matrix.service }}/Dockerfile .
 
       - name: Build Docker image for frontend
         if: matrix.service == 'frontend'
@@ -59,8 +58,7 @@ jobs:
         run: |
           DOCKER_IMAGE_NAME="lukaszandzej/cloud-storage-frontend"
           TAG="${{ github.sha }}"
-          docker build -t $DOCKER_IMAGE_NAME:$TAG .
-          docker tag $DOCKER_IMAGE_NAME:$TAG $DOCKER_IMAGE_NAME:latest
+          docker build -t $DOCKER_IMAGE_NAME:$TAG -t $DOCKER_IMAGE_NAME:latest .
 
       - name: Push Docker image
         env:
