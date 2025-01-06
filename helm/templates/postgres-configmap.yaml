@@ -30,7 +30,7 @@ data:
         timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
-    CREATE INDEX idx_files_user_id ON files(user_id);
+    CREATE INDEX idx_file_user_id ON file(user_id);
     CREATE INDEX idx_logs_user_id ON logs(user_id);
 
   02-init.sql: |

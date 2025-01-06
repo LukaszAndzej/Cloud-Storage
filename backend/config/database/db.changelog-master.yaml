@@ -23,6 +23,9 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: password_hash
+                  type: TEXT
+              - column:
                   name: email
                   type: VARCHAR(255)
                   constraints:
@@ -49,10 +52,12 @@ databaseChangeLog:
                     primaryKey: true
               - column:
                   name: user_id
-                  type: INT
+                  type: BIGINT
                   constraints:
-                    foreignKeyName: fk_files_users
+                    nullable: true
+                    foreignKeyName: file_user_id_fk
                     references: users(id)
+                    onDelete: CASCADE
               - column:
                   name: file_name
                   type: VARCHAR(255)
@@ -63,6 +68,9 @@ databaseChangeLog:
                   type: TEXT
                   constraints:
                     nullable: false
+              - column:
+                  name: size
+                  type: BIGINT
               - column:
                   name: uploaded_at
                   type: TIMESTAMP
