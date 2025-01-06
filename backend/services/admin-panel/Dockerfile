@@ -19,6 +19,7 @@ COPY --from=builder /app/target/admin-panel-1.0.0.jar admin-panel.jar
 
 # Kopiowanie pliku konfiguracyjnego
 COPY src/main/resources/application.properties /app/config/application.properties
+COPY ../../config/database/db.changelog-master.yaml /app/db/changelog/db.changelog-master.yaml
 
 # Eksponowanie portu
 EXPOSE 8080

@@ -19,6 +19,11 @@ spec:
       containers:
       - name: {{ .name }}
         image: {{ .image }}
+        env:
+        {{- range $key, $value := .env }}
+        - name: {{ $key }}
+          value: "{{ $value }}"
+        {{- end }}
         ports:
         - containerPort: {{ .port }}
 ---

@@ -21,31 +21,67 @@ applications:
     image: lukaszandzej/cloud-storage-admin-panel:latest
     replicas: 1
     port: 8081
+    env:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_NAME: cloud_storage
+      DB_USER: cloud_user
+      DB_PASSWORD: root
 
   - name: auth-service
     image: lukaszandzej/cloud-storage-auth-service:latest
     replicas: 1
     port: 8082
+    env:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_NAME: cloud_storage
+      DB_USER: cloud_user
+      DB_PASSWORD: root
 
   - name: file-service
     image: lukaszandzej/cloud-storage-file-service:latest
     replicas: 1
     port: 8083
+    env:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_NAME: cloud_storage
+      DB_USER: cloud_user
+      DB_PASSWORD: root
 
   - name: payment-service
     image: lukaszandzej/cloud-storage-payment-service:latest
     replicas: 1
     port: 8084
+    env:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_NAME: cloud_storage
+      DB_USER: cloud_user
+      DB_PASSWORD: root
 
   - name: support-service
     image: lukaszandzej/cloud-storage-support-service:latest
     replicas: 1
     port: 8085
+    env:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_NAME: cloud_storage
+      DB_USER: cloud_user
+      DB_PASSWORD: root
 
   - name: frontend
     image: lukaszandzej/cloud-storage-frontend:latest
     replicas: 1
     port: 8080
+    env:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_NAME: cloud_storage
+      DB_USER: cloud_user
+      DB_PASSWORD: root
 
 ingress:
   enabled: true

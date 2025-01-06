@@ -1,7 +1,7 @@
 spring:
   datasource:
     url: jdbc:postgresql://postgres:5432/cloud_storage
-    username: admin
+    username: cloud_user
     password: root
     driver-class-name: org.postgresql.Driver
   jpa:
