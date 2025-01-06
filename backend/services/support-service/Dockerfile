@@ -20,7 +20,7 @@ COPY --from=builder /app/services/support-service/target/support-service-1.0.0.j
 COPY --from=builder /app/services/support-service/src/main/resources/application.properties /app/config/application.properties
 COPY ./config/database/db.changelog-master.yaml /app/db/changelog/db.changelog-master.yaml
 
-EXPOSE 8080
+EXPOSE 8085
 
 # Uruchamianie aplikacji
 CMD ["java", "-jar", "support-service.jar", "--spring.config.location=/app/config/application.properties"]

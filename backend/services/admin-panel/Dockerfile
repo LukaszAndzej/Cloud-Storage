@@ -25,7 +25,7 @@ COPY --from=builder /app/services/admin-panel/src/main/resources/application.pro
 COPY ./config/database/db.changelog-master.yaml /app/db/changelog/db.changelog-master.yaml
 
 # Eksponowanie portu
-EXPOSE 8080
+EXPOSE 8081
 
 # Uruchamianie aplikacji
 CMD ["java", "-jar", "admin-panel.jar", "--spring.config.location=/app/config/application.properties"]

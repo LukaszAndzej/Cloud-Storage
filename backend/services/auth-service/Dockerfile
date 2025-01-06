@@ -20,7 +20,7 @@ COPY --from=builder /app/services/auth-service/target/auth-service-1.0.0.jar aut
 COPY --from=builder /app/services/auth-service/src/main/resources/application.properties /app/config/application.properties
 COPY ./config/database/db.changelog-master.yaml /app/db/changelog/db.changelog-master.yaml
 
-EXPOSE 8080
+EXPOSE 8082
 
 # Uruchamianie aplikacji
 CMD ["java", "-jar", "auth-service.jar", "--spring.config.location=/app/config/application.properties"]
