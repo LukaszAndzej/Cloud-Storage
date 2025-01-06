@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/user")
 public class UserController {
 
     private final RestTemplate restTemplate = new RestTemplate();
@@ -55,7 +54,7 @@ public class UserController {
 
     @GetMapping("/register")
     public String registerPage() {
-        return "register"; // Wyświetla stronę register.html z templates
+        return "register";
     }
 
     @PostMapping("/register")
@@ -78,7 +77,7 @@ public class UserController {
             );
 
             if (response.getStatusCode().is2xxSuccessful()) {
-                return "redirect:/user/login"; // Przekierowanie na stronę logowania
+                return "redirect:/login";
             } else {
                 model.addAttribute("error", "Registration failed. Try again.");
                 return "register";

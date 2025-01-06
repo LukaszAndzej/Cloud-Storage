@@ -14,13 +14,21 @@ public class FileService {
     private final String fileServiceUrl = "http://file-service:8083";
 
     public void uploadFile(MultipartFile file) {
-        String url = fileServiceUrl + "/upload";
-        restTemplate.postForEntity(url, file.getResource(), String.class);
+        try {
+            String url = fileServiceUrl + "/upload";
+            restTemplate.postForEntity(url, file.getResource(), String.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to upload file: " + e.getMessage());
+        }
     }
 
     public List<String> getAllFiles() {
-        String url = fileServiceUrl + "/files";
-        ResponseEntity<List> response = restTemplate.getForEntity(url, List.class);
-        return response.getBody();
+        try {
+            String url = fileServiceUrl + "/files";
+            ResponseEntity<List> response = restTemplate.getForEntity(url, List.class);
+            return response.getBody();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to fetch files: " + e.getMessage());
+        }
     }
 }

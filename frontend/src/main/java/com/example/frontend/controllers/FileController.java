@@ -22,12 +22,12 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public String handleFileUpload(MultipartFile file) {
+    public String handleFileUpload(MultipartFile file, Model model) {
         try {
             fileService.uploadFile(file);
             return "redirect:/files";
         } catch (Exception e) {
-            e.printStackTrace();
+            model.addAttribute("error", "Failed to upload file: " + e.getMessage());
             return "error";
         }
     }
@@ -37,7 +37,7 @@ public class FileController {
         try {
             model.addAttribute("files", fileService.getAllFiles());
         } catch (Exception e) {
-            e.printStackTrace();
+            model.addAttribute("error", "Failed to fetch files: " + e.getMessage());
             model.addAttribute("files", null);
         }
         return "files";
