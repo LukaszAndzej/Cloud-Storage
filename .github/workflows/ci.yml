@@ -44,6 +44,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Configure Docker daemon
+        run: |
+          echo '{"max-concurrent-uploads": 1}' | sudo tee /etc/docker/daemon.json
+          sudo systemctl restart docker
+
       - name: Build Docker image for backend services
         if: matrix.service != 'frontend'
         working-directory: backend
@@ -68,5 +73,9 @@ jobs:
           DOCKER_IMAGE_NAME="lukaszandzej/cloud-storage-${{ matrix.service }}"
           TAG="${{ github.sha }}"
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-          docker push $DOCKER_IMAGE_NAME:$TAG
-          docker push $DOCKER_IMAGE_NAME:latest
+          for i in {1..5}; do
+            docker push $DOCKER_IMAGE_NAME:$TAG && break || sleep 10
+          done
+          for i in {1..5}; do
+            docker push $DOCKER_IMAGE_NAME:latest && break || sleep 10
+          done
