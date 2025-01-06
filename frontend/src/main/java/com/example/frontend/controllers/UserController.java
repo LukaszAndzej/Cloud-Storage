@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class UserController {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private static final String AUTH_SERVICE_URL = "http://auth-service.default.svc.cluster.local:8080";
+    private static final String AUTH_SERVICE_URL = "http://auth-service:8080/auth";
     private static final Logger LOGGER = Logger.getLogger(UserController.class.getName());
 
     @GetMapping("/login")
@@ -73,31 +73,23 @@ public class UserController {
             Model model
     ) {
         try {
-            LOGGER.info("Checking auth-service health before registration.");
-            ResponseEntity<String> healthCheck = restTemplate.getForEntity(AUTH_SERVICE_URL + "/actuator/health", String.class);
-
-            if (!healthCheck.getStatusCode().is2xxSuccessful()) {
-                model.addAttribute("error", "Auth service is unavailable.");
-                LOGGER.warning("Auth service health check failed.");
-                return "register";
-            }
-
-            LOGGER.info("Attempting to register user: " + username);
-
             Map<String, String> registerRequest = new HashMap<>();
             registerRequest.put("username", username);
             registerRequest.put("password", password);
             registerRequest.put("email", email);
 
-            ResponseEntity<String> response = restTemplate.postForEntity(
+            LOGGER.info("Sending registration request to Auth-Service.");
+
+            HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(registerRequest);
+            ResponseEntity<Map> response = restTemplate.postForEntity(
                     AUTH_SERVICE_URL + "/register",
-                    registerRequest,
-                    String.class
+                    requestEntity,
+                    Map.class
             );
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 LOGGER.info("User registered successfully: " + username);
-                return "redirect:/user/login";
+                return "redirect:/login";
             } else {
                 model.addAttribute("error", "Registration failed. Try again.");
                 LOGGER.warning("Registration failed for user: " + username);
@@ -105,7 +97,7 @@ public class UserController {
             }
         } catch (Exception e) {
             LOGGER.severe("Error during registration: " + e.getMessage());
-            model.addAttribute("error", "An error occurred during registration.");
+            model.addAttribute("error", "An error occurred during registration. Please try again.");
             return "register";
         }
     }

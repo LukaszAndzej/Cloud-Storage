@@ -33,7 +33,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/register", "/auth/login", "/actuator/**").permitAll() // Dopuszczamy te endpointy bez autoryzacji
+                .requestMatchers("/auth/register", "/auth/login", "/actuator/health").permitAll() // Dopuszczamy te endpointy bez autoryzacji
                 .anyRequest().authenticated()
             )
             .httpBasic(httpBasic -> {}); // Podstawowe uwierzytelnianie HTTP
