@@ -74,31 +74,30 @@ public class UserController {
             Model model
     ) {
         try {
+            LOGGER.info("Sending registration request to Auth-Service.");
+            
             Map<String, String> registerRequest = new HashMap<>();
             registerRequest.put("username", username);
             registerRequest.put("password", password);
             registerRequest.put("email", email);
 
-            LOGGER.info("Sending registration request to Auth-Service.");
-
-            HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(registerRequest);
-            ResponseEntity<Map> response = restTemplate.postForEntity(
-                    AUTH_SERVICE_URL + "/register",
-                    requestEntity,
-                    Map.class
+            ResponseEntity<String> response = restTemplate.postForEntity(
+                    "http://auth-service:8080/auth/register",
+                    registerRequest,
+                    String.class
             );
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 LOGGER.info("User registered successfully: " + username);
-                return "redirect:/login";
+                return "redirect:/home"; // Przekierowanie na stronę home
             } else {
                 model.addAttribute("error", "Registration failed. Try again.");
-                LOGGER.warning("Registration failed for user: " + username);
+                LOGGER.warning("Registration failed: " + response.getStatusCode());
                 return "register";
             }
         } catch (Exception e) {
             LOGGER.severe("Error during registration: " + e.getMessage());
-            model.addAttribute("error", "An error occurred during registration. Please try again.");
+            model.addAttribute("error", "An error occurred during registration.");
             return "register";
         }
     }
@@ -109,5 +108,10 @@ public class UserController {
         session.invalidate();
         LOGGER.info("User logged out: " + username);
         return "redirect:/";
+    }
+
+    @GetMapping("/home")
+    public String homePage() {
+        return "home"; // Powiązanie z plikiem home.html w resources/templates
     }
 }
