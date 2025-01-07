@@ -11,6 +11,9 @@ public class File {
     @Column(nullable = false)
     private String fileName;
 
+    @Column(nullable = false, unique = true)
+    private String filePath;
+
     @Lob
     @Column(nullable = false)
     private byte[] content;
@@ -29,5 +32,13 @@ public class File {
 
     public Long getSize() { return size; }
     public void setSize(Long size) { this.size = size; }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
 }
 

@@ -74,6 +74,7 @@ databaseChangeLog:
               - column:
                   name: content
                   type: BYTEA
+                  defaultValue: ''
                   constraints:
                     nullable: true
               - column:
