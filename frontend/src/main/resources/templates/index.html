@@ -3,25 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Cloud Storage</title>
+    <title>Cloud Storage</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-b from-green-100 to-green-300 min-h-screen flex items-center justify-center">
+<body class="bg-gradient-to-b from-blue-100 to-blue-300 min-h-screen flex items-center justify-center">
     <div class="bg-white shadow-md rounded-lg p-8 max-w-lg w-full">
-        <h1 class="text-4xl font-bold text-green-600 mb-6 text-center">Welcome Home</h1>
-        <p class="text-lg text-gray-700 text-center mb-6">What would you like to do today?</p>
+        <h1 class="text-4xl font-bold text-blue-600 mb-6 text-center">Welcome to Cloud Storage</h1>
+        <p class="text-lg text-gray-700 text-center mb-6">Please log in or sign up to continue.</p>
         <div class="space-y-4">
-            <a href="/user/upload" class="block w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg text-center transition">
-                Upload a File
+            <a href="/user/login" class="block w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg text-center transition">
+                Login
             </a>
-            <a href="/user/files" class="block w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg text-center transition">
-                View Your Files
+            <a href="/user/register" class="block w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg text-center transition">
+                Sign Up
             </a>
-            <form action="/user/logout" method="post">
-                <button type="submit" class="block w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg text-center transition">
-                    Logout
-                </button>
-            </form>
         </div>
     </div>
 </body>
