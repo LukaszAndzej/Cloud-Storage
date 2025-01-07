@@ -22,6 +22,7 @@ data:
         file_name VARCHAR(255) NOT NULL,
         file_path TEXT NOT NULL,
         size BIGINT,
+        content BYTEA,
         uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
@@ -41,11 +42,11 @@ data:
     ('test_user', 'hashed_password_1', 'hashed_password_1', 'user1@example.com', 'ADMIN'),
     ('demo_user', 'hashed_password_2', 'hashed_password_2', 'user2@example.com', 'USER');
 
-    INSERT INTO file (user_id, file_name, file_path, size) 
+    INSERT INTO file (user_id, file_name, file_path, size, content) 
     VALUES 
-    (1, 'file1.txt', '/uploads/file1.txt', 1024),
-    (1, 'file2.txt', '/uploads/file2.txt', 2048),
-    (2, 'file3.txt', '/uploads/file3.txt', 512);
+    (1, 'file1.txt', '/uploads/file1.txt', 1024, '\\x'),
+    (1, 'file2.txt', '/uploads/file2.txt', 2048, '\\x'),
+    (2, 'file3.txt', '/uploads/file3.txt', 512, '\\x');
 
     INSERT INTO logs (user_id, action) 
     VALUES 

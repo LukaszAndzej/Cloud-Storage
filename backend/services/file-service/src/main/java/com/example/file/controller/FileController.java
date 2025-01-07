@@ -1,51 +1,43 @@
 package com.example.file.controllers;
 
 import com.example.file.model.File;
-import com.example.file.service.FileService;
+import com.example.file.repository.FileRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.io.IOException;
 
 @RestController
-@RequestMapping("/files")
+@RequestMapping("/upload")
 public class FileController {
-    private final FileService fileService;
 
-    public FileController(FileService fileService) {
-        this.fileService = fileService;
+    private final FileRepository fileRepository;
+
+    public FileController(FileRepository fileRepository) {
+        this.fileRepository = fileRepository;
     }
 
-    @PostMapping("/upload")
+    @PostMapping
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
-            fileService.saveFile(
-                file.getOriginalFilename(),
-                file.getBytes(),
-                file.getSize()
-            );
-            return ResponseEntity.ok("File uploaded successfully");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file");
+            File newFile = new File();
+            newFile.setFileName(file.getOriginalFilename());
+            newFile.setFilePath("/uploads/" + file.getOriginalFilename());
+            newFile.setSize(file.getSize());
+            newFile.setContent(file.getBytes());
+
+            fileRepository.save(newFile);
+
+            return ResponseEntity.ok("File uploaded successfully.");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file: " + e.getMessage());
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<byte[]> getFile(@PathVariable Long id) {
-        try {
-            File file = fileService.getFile(id);
-            return ResponseEntity.ok()
-                    .header("Content-Disposition", "attachment; filename=\"" + file.getFileName() + "\"")
-                    .body(file.getContent());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-    }
-
-    @GetMapping
-    public ResponseEntity<List<File>> listFiles() {
-        return ResponseEntity.ok(fileService.getAllFiles());
+    @GetMapping("/files")
+    public ResponseEntity<?> getFiles() {
+        return ResponseEntity.ok(fileRepository.findAll());
     }
 }

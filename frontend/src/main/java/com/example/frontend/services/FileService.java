@@ -18,16 +18,17 @@ public class FileService {
 
     public void uploadFile(MultipartFile file) {
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-            HttpEntity<MultipartFile> requestEntity = new HttpEntity<>(file, headers);
-
             String url = fileServiceUrl + "/upload";
-            ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
+
+            // Tworzenie żądania HTTP z plikiem
+            ResponseEntity<String> response = restTemplate.postForEntity(
+                    url, 
+                    file.getResource(), 
+                    String.class
+            );
 
             if (!response.getStatusCode().is2xxSuccessful()) {
-                throw new RuntimeException("File upload failed: " + response.getStatusCode());
+                throw new RuntimeException("Upload failed with status: " + response.getStatusCode());
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to upload file: " + e.getMessage());
