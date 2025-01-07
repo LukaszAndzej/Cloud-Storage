@@ -2,12 +2,11 @@ package com.example.frontend.controllers;
 
 import com.example.frontend.services.FileService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
@@ -31,7 +30,7 @@ public class FileController {
             fileService.uploadFile(file);
             return "redirect:/user/files";
         } catch (Exception e) {
-            model.addAttribute("error", "Failed to upload file: " + e.getMessage());
+            model.addAttribute("errorMessage", "Failed to upload file: " + e.getMessage());
             return "error";
         }
     }
@@ -41,14 +40,9 @@ public class FileController {
         try {
             model.addAttribute("files", fileService.getAllFiles());
         } catch (Exception e) {
-            model.addAttribute("error", "Failed to fetch files: " + e.getMessage());
+            model.addAttribute("errorMessage", "Failed to fetch files: " + e.getMessage());
+            return "error";
         }
         return "files";
-    }
-
-    @ExceptionHandler(Exception.class)
-    public String handleException(Exception e, Model model) {
-        model.addAttribute("errorMessage", "An unexpected error occurred: " + e.getMessage());
-        return "error";
     }
 }

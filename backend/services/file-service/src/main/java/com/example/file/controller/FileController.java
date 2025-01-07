@@ -1,35 +1,32 @@
-package com.example.file.controller;
+package com.example.file.controllers;
 
-import com.example.file.model.File;
-import com.example.file.service.FileService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/files")
+@RequestMapping("/upload")
 public class FileController {
 
-    private final FileService fileService;
-
-    public FileController(FileService fileService) {
-        this.fileService = fileService;
-    }
-
-    @GetMapping
-    public List<File> getAllFiles() {
-        return fileService.getAllFiles();
-    }
+    private final List<String> files = new ArrayList<>();
 
     @PostMapping
-    public ResponseEntity<File> uploadFile(@RequestBody File file) {
-        return ResponseEntity.ok(fileService.saveFile(file));
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+        try {
+            // Zapis pliku - tutaj symulacja
+            files.add(file.getOriginalFilename());
+            return ResponseEntity.ok("File uploaded successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file");
+        }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteFile(@PathVariable Long id) {
-        fileService.deleteFile(id);
-        return ResponseEntity.ok("File deleted successfully.");
+    @GetMapping("/files")
+    public ResponseEntity<List<String>> getFiles() {
+        return ResponseEntity.ok(files);
     }
 }

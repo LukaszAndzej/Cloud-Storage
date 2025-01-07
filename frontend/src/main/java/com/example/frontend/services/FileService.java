@@ -1,5 +1,8 @@
 package com.example.frontend.services;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -11,12 +14,21 @@ import java.util.List;
 public class FileService {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String fileServiceUrl = "http://file-service:8083";
+    private final String fileServiceUrl = "http://file-service:8080";
 
     public void uploadFile(MultipartFile file) {
         try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+            HttpEntity<MultipartFile> requestEntity = new HttpEntity<>(file, headers);
+
             String url = fileServiceUrl + "/upload";
-            restTemplate.postForEntity(url, file.getResource(), String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
+
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                throw new RuntimeException("File upload failed: " + response.getStatusCode());
+            }
         } catch (Exception e) {
             throw new RuntimeException("Failed to upload file: " + e.getMessage());
         }
