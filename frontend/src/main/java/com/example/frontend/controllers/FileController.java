@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
+@RequestMapping("/user")
 public class FileController {
 
     private final FileService fileService;
@@ -22,10 +23,10 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public String handleFileUpload(MultipartFile file, Model model) {
+    public String handleFileUpload(@RequestParam("file") MultipartFile file, Model model) {
         try {
             fileService.uploadFile(file);
-            return "redirect:/files";
+            return "redirect:/user/files";
         } catch (Exception e) {
             model.addAttribute("error", "Failed to upload file: " + e.getMessage());
             return "error";
@@ -38,8 +39,13 @@ public class FileController {
             model.addAttribute("files", fileService.getAllFiles());
         } catch (Exception e) {
             model.addAttribute("error", "Failed to fetch files: " + e.getMessage());
-            model.addAttribute("files", null);
         }
         return "files";
+    }
+
+    @ExceptionHandler(Exception.class)
+    public String handleException(Exception e, Model model) {
+        model.addAttribute("errorMessage", "An unexpected error occurred: " + e.getMessage());
+        return "error";
     }
 }
