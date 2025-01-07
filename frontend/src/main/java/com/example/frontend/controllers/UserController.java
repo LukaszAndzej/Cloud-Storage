@@ -48,7 +48,7 @@ public class UserController {
             if (response.getStatusCode().is2xxSuccessful()) {
                 session.setAttribute("user", username);
                 LOGGER.info("User logged in successfully: " + username);
-                return "redirect:/home";
+                return "redirect:/user/home";
             } else {
                 model.addAttribute("error", "Invalid username or password.");
                 LOGGER.warning("Invalid login attempt for user: " + username);
@@ -89,7 +89,7 @@ public class UserController {
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 LOGGER.info("User registered successfully: " + username);
-                return "redirect:/home"; // Przekierowanie na stronę home
+                return "redirect:/user/home"; // Przekierowanie na stronę home
             } else {
                 model.addAttribute("error", "Registration failed. Try again.");
                 LOGGER.warning("Registration failed: " + response.getStatusCode());
