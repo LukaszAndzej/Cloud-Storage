@@ -25,30 +25,37 @@ public class UserController {
         return "login";
     }
 
-    @PostMapping("/user/login")
+    @PostMapping("/login")
     public String login(
             @RequestParam String username,
             @RequestParam String password,
             HttpSession session,
-            Model model) {
+            Model model
+    ) {
         try {
             Map<String, String> loginRequest = new HashMap<>();
             loginRequest.put("username", username);
             loginRequest.put("password", password);
 
+            LOGGER.info("Attempting to log in user: " + username);
+
             ResponseEntity<String> response = restTemplate.postForEntity(
-                    AUTH_SERVICE_URL + "/auth/login",
+                    AUTH_SERVICE_URL + "/login",
                     loginRequest,
-                    String.class);
+                    String.class
+            );
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 session.setAttribute("user", username);
-                return "redirect:/";
+                LOGGER.info("User logged in successfully: " + username);
+                return "redirect:/home";
             } else {
                 model.addAttribute("error", "Invalid username or password.");
+                LOGGER.warning("Invalid login attempt for user: " + username);
                 return "login";
             }
         } catch (Exception e) {
+            LOGGER.severe("Error during login: " + e.getMessage());
             model.addAttribute("error", "An error occurred while logging in.");
             return "login";
         }
@@ -59,30 +66,37 @@ public class UserController {
         return "register";
     }
 
-    @PostMapping("/user/register")
+    @PostMapping("/register")
     public String register(
             @RequestParam String username,
             @RequestParam String password,
             @RequestParam String email,
-            Model model) {
+            Model model
+    ) {
         try {
+            LOGGER.info("Sending registration request to Auth-Service.");
+            
             Map<String, String> registerRequest = new HashMap<>();
             registerRequest.put("username", username);
             registerRequest.put("password", password);
             registerRequest.put("email", email);
 
             ResponseEntity<String> response = restTemplate.postForEntity(
-                    AUTH_SERVICE_URL + "/auth/register",
+                    "http://auth-service:8080/auth/register",
                     registerRequest,
-                    String.class);
+                    String.class
+            );
 
             if (response.getStatusCode().is2xxSuccessful()) {
-                return "redirect:/user/login";
+                LOGGER.info("User registered successfully: " + username);
+                return "redirect:/home"; // Przekierowanie na stronę home
             } else {
                 model.addAttribute("error", "Registration failed. Try again.");
+                LOGGER.warning("Registration failed: " + response.getStatusCode());
                 return "register";
             }
         } catch (Exception e) {
+            LOGGER.severe("Error during registration: " + e.getMessage());
             model.addAttribute("error", "An error occurred during registration.");
             return "register";
         }
@@ -99,13 +113,5 @@ public class UserController {
     @GetMapping("/home")
     public String homePage() {
         return "home"; // Powiązanie z plikiem home.html w resources/templates
-    }
-
-    @GetMapping("/")
-    public String home(HttpSession session) {
-        if (session.getAttribute("user") == null) {
-            return "redirect:/user/login";
-        }
-        return "home";
     }
 }
