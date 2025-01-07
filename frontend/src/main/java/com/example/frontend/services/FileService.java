@@ -1,5 +1,6 @@
 package com.example.frontend.services;
 
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -20,12 +21,19 @@ public class FileService {
         try {
             String url = fileServiceUrl + "/upload";
 
-            // Tworzenie żądania HTTP z plikiem
-            ResponseEntity<String> response = restTemplate.postForEntity(
-                    url, 
-                    file.getResource(), 
-                    String.class
-            );
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+            ByteArrayResource resource = new ByteArrayResource(file.getBytes()) {
+                @Override
+                public String getFilename() {
+                    return file.getOriginalFilename(); // Nazwa pliku
+                }
+            };
+
+            HttpEntity<ByteArrayResource> requestEntity = new HttpEntity<>(resource, headers);
+
+            ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
 
             if (!response.getStatusCode().is2xxSuccessful()) {
                 throw new RuntimeException("Upload failed with status: " + response.getStatusCode());
