@@ -1,4 +1,4 @@
-databaseChangeLog:
+databaseChangeLog: 
   - changeSet:
       id: 1
       author: initial
@@ -71,6 +71,11 @@ databaseChangeLog:
               - column:
                   name: size
                   type: BIGINT
+              - column:
+                  name: content
+                  type: BYTEA
+                  constraints:
+                    nullable: true
               - column:
                   name: uploaded_at
                   type: TIMESTAMP

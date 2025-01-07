@@ -14,6 +14,7 @@ CREATE TABLE file (
     file_name VARCHAR(255) NOT NULL,
     file_path TEXT NOT NULL,
     size BIGINT,
+    content BYTEA,
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
