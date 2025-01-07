@@ -21,17 +21,37 @@ public class File {
     @Column(nullable = false)
     private Long size;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getFileName() { return fileName; }
-    public void setFileName(String fileName) { this.fileName = fileName; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public byte[] getContent() { return content; }
-    public void setContent(byte[] content) { this.content = content; }
+    public String getFileName() {
+        return fileName;
+    }
 
-    public Long getSize() { return size; }
-    public void setSize(Long size) { this.size = size; }
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public byte[] getContent() {
+        return content;
+    }
+
+    public void setContent(byte[] content) {
+        this.content = content;
+    }
+
+    public Long getSize() {
+        return size;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
+    }
 
     public String getFilePath() {
         return filePath;
@@ -41,4 +61,3 @@ public class File {
         this.filePath = filePath;
     }
 }
-

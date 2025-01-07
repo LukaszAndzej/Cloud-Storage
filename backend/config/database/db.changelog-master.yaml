@@ -74,7 +74,6 @@ databaseChangeLog:
               - column:
                   name: content
                   type: BYTEA
-                  defaultValue: ''
                   constraints:
                     nullable: true
               - column:
@@ -95,7 +94,7 @@ databaseChangeLog:
                     primaryKey: true
               - column:
                   name: user_id
-                  type: INT
+                  type: BIGINT
                   constraints:
                     foreignKeyName: fk_logs_users
                     references: users(id)
