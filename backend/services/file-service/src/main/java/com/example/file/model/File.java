@@ -11,8 +11,9 @@ public class File {
     @Column(nullable = false)
     private String fileName;
 
-    @Column(nullable = false, unique = true)
-    private String filePath;
+    @Lob
+    @Column(nullable = false)
+    private byte[] content;
 
     @Column(nullable = false)
     private Long size;
@@ -23,9 +24,10 @@ public class File {
     public String getFileName() { return fileName; }
     public void setFileName(String fileName) { this.fileName = fileName; }
 
-    public String getFilePath() { return filePath; }
-    public void setFilePath(String filePath) { this.filePath = filePath; }
+    public byte[] getContent() { return content; }
+    public void setContent(byte[] content) { this.content = content; }
 
     public Long getSize() { return size; }
     public void setSize(Long size) { this.size = size; }
 }
+
