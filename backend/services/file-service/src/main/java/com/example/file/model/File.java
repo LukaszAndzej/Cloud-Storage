@@ -3,6 +3,8 @@ package com.example.file.model;
 import jakarta.persistence.*;
 import java.util.Objects;
 
+import com.example.file.model.User;
+
 @Entity
 @Table(name = "file")
 public class File {
