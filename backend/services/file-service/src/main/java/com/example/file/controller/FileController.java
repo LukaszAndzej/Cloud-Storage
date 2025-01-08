@@ -20,7 +20,8 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file,
+                                             @RequestParam("userId") Long userId) {
         try {
             File newFile = new File();
             newFile.setFileName(file.getOriginalFilename());
@@ -33,7 +34,8 @@ public class FileController {
 
             return ResponseEntity.ok("File uploaded successfully.");
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to upload file: " + e.getMessage());
         }
     }
 
