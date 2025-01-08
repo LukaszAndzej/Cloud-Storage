@@ -24,21 +24,19 @@ public class FileController {
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal User user) {
         try {
-            if (user == null) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
-            }
-
             File newFile = new File();
             newFile.setFileName(file.getOriginalFilename());
             newFile.setFilePath("/uploads/" + file.getOriginalFilename());
+            System.out.println("Generated file path: " + newFile.getFilePath());
             newFile.setContent(file.getBytes());
             newFile.setSize(file.getSize());
             newFile.setUser(user);
-
+            System.out.println("Uploading file by user: " + user.getUsername());
             fileRepository.save(newFile);
 
             return ResponseEntity.ok("File uploaded successfully");
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file: " + e.getMessage());
         }
     }
