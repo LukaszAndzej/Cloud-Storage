@@ -1,12 +1,9 @@
 package com.example.file.model;
 
 import jakarta.persistence.*;
-import java.util.Objects;
-
-import com.example.file.model.User;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "file")
 public class File {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,11 +22,13 @@ public class File {
     @Column(nullable = false)
     private Long size;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // Getters and setters
+    @Column(nullable = false)
+    private LocalDateTime uploadedAt = LocalDateTime.now();
+    
     public Long getId() {
         return id;
     }
@@ -78,31 +77,11 @@ public class File {
         this.user = user;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof File)) return false;
-        File file = (File) o;
-        return Objects.equals(id, file.id) &&
-               Objects.equals(fileName, file.fileName) &&
-               Objects.equals(filePath, file.filePath) &&
-               Objects.equals(size, file.size) &&
-               Objects.equals(user, file.user);
+    public LocalDateTime getUploadedAt() {
+        return uploadedAt;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, fileName, filePath, size, user);
-    }
-
-    @Override
-    public String toString() {
-        return "File{" +
-               "id=" + id +
-               ", fileName='" + fileName + '\'' +
-               ", filePath='" + filePath + '\'' +
-               ", size=" + size +
-               ", user=" + user +
-               '}';
+    public void setUploadedAt(LocalDateTime uploadedAt) {
+        this.uploadedAt = uploadedAt;
     }
 }
