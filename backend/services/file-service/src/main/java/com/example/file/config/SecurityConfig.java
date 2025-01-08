@@ -18,6 +18,9 @@ public class SecurityConfig {
                 .requestMatchers("/files/**").authenticated()
                 .anyRequest().permitAll()
             .and()
+            .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+            .and()
             .httpBasic();
 
         return http.build();
