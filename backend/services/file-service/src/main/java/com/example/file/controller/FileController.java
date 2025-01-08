@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/upload")
+@RequestMapping("/files")
 public class FileController {
 
     private final FileRepository fileRepository;
@@ -36,7 +36,7 @@ public class FileController {
         }
     }
 
-    @GetMapping("/files")
+    @GetMapping
     public ResponseEntity<?> getFiles() {
         return ResponseEntity.ok(fileRepository.findAll());
     }
