@@ -21,7 +21,7 @@ public class FileController {
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file,
-                                             @RequestParam("userId") Long userId) {
+                                            @RequestParam("userId") Long userId) {
         try {
             File newFile = new File();
             newFile.setFileName(file.getOriginalFilename());

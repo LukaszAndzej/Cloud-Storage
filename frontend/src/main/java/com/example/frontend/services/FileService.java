@@ -31,7 +31,11 @@ public class FileService {
                 }
             };
 
-            HttpEntity<ByteArrayResource> requestEntity = new HttpEntity<>(resource, headers);
+            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+            body.add("file", resource);
+            body.add("userId", "1"); // Przykładowe userId
+
+            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
             ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
 
