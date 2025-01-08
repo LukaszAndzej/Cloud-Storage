@@ -14,7 +14,7 @@ CREATE TABLE file (
     file_path VARCHAR(255),
     content BYTEA,
     size BIGINT,
-    user_id BIGINT REFERENCES users(id)
+    user_id BIGINT REFERENCES users(id),
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
