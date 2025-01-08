@@ -9,12 +9,12 @@ CREATE TABLE users (
 );
 
 CREATE TABLE file (
-    id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
-    file_name VARCHAR(255) NOT NULL,
-    file_path TEXT NOT NULL,
-    size BIGINT,
+    id SERIAL PRIMARY KEY,
+    file_name VARCHAR(255),
+    file_path VARCHAR(255),
     content BYTEA,
+    size BIGINT,
+    user_id BIGINT REFERENCES users(id)
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

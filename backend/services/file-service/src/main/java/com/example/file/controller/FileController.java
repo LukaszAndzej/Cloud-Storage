@@ -20,22 +20,19 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file,
-                                            @RequestParam("userId") Long userId) {
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal User user) {
         try {
             File newFile = new File();
             newFile.setFileName(file.getOriginalFilename());
             newFile.setFilePath("/uploads/" + file.getOriginalFilename());
-            newFile.setSize(file.getSize());
             newFile.setContent(file.getBytes());
-            newFile.setUserId(userId);
-
+            newFile.setSize(file.getSize());
+            newFile.setUser(user);
             fileRepository.save(newFile);
 
-            return ResponseEntity.ok("File uploaded successfully.");
+            return ResponseEntity.ok("File uploaded successfully");
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to upload file: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file");
         }
     }
 

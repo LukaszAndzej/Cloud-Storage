@@ -1,8 +1,10 @@
 package com.example.file.model;
 
 import jakarta.persistence.*;
+import java.util.Objects;
 
 @Entity
+@Table(name = "file")
 public class File {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,17 +23,11 @@ public class File {
     @Column(nullable = false)
     private Long size;
 
-    @Column(nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -46,6 +42,14 @@ public class File {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
     public byte[] getContent() {
@@ -64,11 +68,39 @@ public class File {
         this.size = size;
     }
 
-    public String getFilePath() {
-        return filePath;
+    public User getUser() {
+        return user;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof File)) return false;
+        File file = (File) o;
+        return Objects.equals(id, file.id) &&
+               Objects.equals(fileName, file.fileName) &&
+               Objects.equals(filePath, file.filePath) &&
+               Objects.equals(size, file.size) &&
+               Objects.equals(user, file.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, fileName, filePath, size, user);
+    }
+
+    @Override
+    public String toString() {
+        return "File{" +
+               "id=" + id +
+               ", fileName='" + fileName + '\'' +
+               ", filePath='" + filePath + '\'' +
+               ", size=" + size +
+               ", user=" + user +
+               '}';
     }
 }
