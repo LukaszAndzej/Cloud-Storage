@@ -7,9 +7,9 @@ VALUES
 -- Dodanie plików
 INSERT INTO file (user_id, file_name, file_path, size, content) 
 VALUES 
-(1, 'file1.txt', '/uploads/file1.txt', 1024, '\\x'),
-(1, 'file2.txt', '/uploads/file2.txt', 2048, '\\x'),
-(2, 'file3.txt', '/uploads/file3.txt', 512, '\\x');
+(1, 'file1.txt', '/uploads/file1.txt', 1024, NULL),
+(1, 'file2.txt', '/uploads/file2.txt', 2048, NULL),
+(2, 'file3.txt', '/uploads/file3.txt', 512, NULL);
 
 -- Dodanie logów
 INSERT INTO logs (user_id, action) 
