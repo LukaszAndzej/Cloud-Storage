@@ -15,7 +15,7 @@ import java.util.List;
 public class FileService {
 
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String fileServiceUrl = "http://file-service:8080";
+    private final String fileServiceUrl = "http://file-service.default.svc.cluster.local:8083";
 
     public void uploadFile(MultipartFile file) {
         try {

@@ -43,7 +43,7 @@ applications:
   - name: file-service
     image: lukaszandzej/cloud-storage-file-service:latest
     replicas: 1
-    port: 8083
+    port: 8080
     env:
       DB_HOST: postgres
       DB_PORT: "5432"
@@ -83,6 +83,7 @@ applications:
       DB_NAME: cloud_storage
       DB_USER: cloud_user
       DB_PASSWORD: root
+      FILE_SERVICE_URL: http://file-service.default.svc.cluster.local:8080
       AUTH_SERVICE_URL: http://auth-service.default.svc.cluster.local:8080  # Poprawiony URL
 
 ingress:

@@ -20,7 +20,7 @@ COPY --from=builder /app/services/file-service/target/file-service-1.0.0.jar fil
 COPY --from=builder /app/services/file-service/src/main/resources/application.properties /app/config/application.properties
 COPY ./config/database/db.changelog-master.yaml /app/db/changelog/db.changelog-master.yaml
 
-EXPOSE 8083
+EXPOSE 8080
 
 # Uruchamianie aplikacji
 CMD ["java", "-jar", "file-service.jar", "--spring.config.location=/app/config/application.properties"]
