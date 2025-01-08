@@ -19,7 +19,7 @@ public class FileController {
         this.fileRepository = fileRepository;
     }
 
-    @PostMapping
+    @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
             File newFile = new File();
@@ -27,6 +27,7 @@ public class FileController {
             newFile.setFilePath("/uploads/" + file.getOriginalFilename());
             newFile.setSize(file.getSize());
             newFile.setContent(file.getBytes());
+            newFile.setUserId(userId);
 
             fileRepository.save(newFile);
 

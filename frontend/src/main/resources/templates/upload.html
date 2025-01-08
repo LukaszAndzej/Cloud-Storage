@@ -10,6 +10,9 @@
     <div class="bg-white shadow-md rounded-lg p-8 max-w-lg w-full">
         <h1 class="text-3xl font-bold text-green-600 mb-6 text-center">Upload Your Files</h1>
         <form action="/user/upload" method="POST" enctype="multipart/form-data" class="space-y-4">
+            <!-- Ukryte pole userId -->
+            <input type="hidden" id="userId" name="userId" value="1">
+            
             <div>
                 <label for="file" class="block text-sm font-medium text-gray-700">Choose a file</label>
                 <input type="file" id="file" name="file" required

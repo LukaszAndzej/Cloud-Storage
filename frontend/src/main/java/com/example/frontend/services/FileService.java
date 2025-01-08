@@ -19,7 +19,7 @@ public class FileService {
 
     public void uploadFile(MultipartFile file) {
         try {
-            String url = fileServiceUrl + "/upload";
+            String url = "http://file-service.default.svc.cluster.local:8080/files/upload";
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -27,7 +27,7 @@ public class FileService {
             ByteArrayResource resource = new ByteArrayResource(file.getBytes()) {
                 @Override
                 public String getFilename() {
-                    return file.getOriginalFilename(); // Nazwa pliku
+                    return file.getOriginalFilename();
                 }
             };
 
